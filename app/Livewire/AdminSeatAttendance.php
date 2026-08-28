@@ -148,15 +148,42 @@ class AdminSeatAttendance extends Component
 
             $attendancePercentage = $totalSold > 0 ? round(($totalAttended / $totalSold) * 100, 1) : 0;
 
-            $seatAvailabilities = $seatsQuery->keyBy(function ($item) {
-                return $item->seatMaster->row_num . '-' . $item->seatMaster->col_num;
-            });
+            $groupedSeatsByRow = [];
+            $rowLetters = ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','R','S','T'];
+            foreach ($rowLetters as $rl) {
+                 $groupedSeatsByRow[$rl] = ['L' => [], 'C' => [], 'R' => []];
+            }
+
+            foreach ($seatsQuery as $avail) {
+                if (!$avail->seatMaster->is_active) continue;
+
+                $code = $avail->seatMaster->seat_code;
+                if (preg_match('/^([LCR])-([A-Z]+)(\d+)$/', $code, $matches)) {
+                    $zone = $matches[1];
+                    $rowLetter = $matches[2];
+                    $groupedSeatsByRow[$rowLetter][$zone][] = $avail;
+                }
+            }
+
+            foreach ($groupedSeatsByRow as $row => &$zones) {
+                foreach (['L', 'C', 'R'] as $z) {
+                    usort($zones[$z], function($a, $b) {
+                        return $b->seatMaster->col_num <=> $a->seatMaster->col_num;
+                    });
+                }
+            }
+
+            foreach ($groupedSeatsByRow as $row => $zones) {
+                if (empty($zones['L']) && empty($zones['C']) && empty($zones['R'])) {
+                    unset($groupedSeatsByRow[$row]);
+                }
+            }
         }
 
         return view('livewire.admin-seat-attendance', [
             'sessions' => $sessions,
             'activeSession' => $activeSession,
-            'seatAvailabilities' => $seatAvailabilities,
+            'groupedSeatsByRow' => $groupedSeatsByRow ?? [],
             'totalCapacity' => $totalCapacity,
             'totalSold' => $totalSold,
             'totalAttended' => $totalAttended,

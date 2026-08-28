@@ -143,55 +143,50 @@
             </div>
 
             <div class="inline-block min-w-full align-middle">
-                <div class="w-max mx-auto flex flex-col items-center gap-1 sm:gap-1.5 p-2 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <div class="w-max mx-auto flex flex-col items-center gap-2 sm:gap-2.5 p-3 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200">
                     
-                    <!-- STAGE Box -->
-                    <div class="w-full max-w-xs mx-auto mb-6 text-center">
-                        <div class="py-2 px-8 bg-slate-800 rounded-xl border border-slate-700 shadow-md flex items-center justify-center mx-auto w-48">
-                            <span class="font-heading font-black text-xs tracking-[0.3em] uppercase text-white">STAGE PERTUNJUKAN</span>
+                    <!-- Official STAGE Box -->
+                    <div class="w-full max-w-xs mx-auto mb-6 sm:mb-8 text-center">
+                        <div class="py-2.5 px-8 bg-slate-800 rounded-xl border border-slate-700 shadow-md flex items-center justify-center mx-auto w-48">
+                            <span class="font-heading font-black text-xs sm:text-sm tracking-[0.25em] uppercase text-white">STAGE</span>
                         </div>
                     </div>
 
-                    @for ($row = 1; $row <= $venue->total_rows; $row++)
-                        @php $rowLetter = \App\Models\SeatMaster::rowNumToLetter($row); @endphp
-                        <div class="flex items-center gap-1 sm:gap-1.5 w-full justify-center">
-                            <!-- Row Label Left -->
-                            <span class="w-4 sm:w-5 text-[10px] sm:text-xs font-bold text-slate-600 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                    <!-- Global Grid Container untuk Lorong Vertikal Lurus -->
+                    <div class="grid grid-cols-[1fr_auto_1fr] gap-x-4 sm:gap-x-8 gap-y-1 sm:gap-y-1.5 w-full min-w-max mt-4">
+                        <!-- Headers Zona -->
+                        <div class="text-right text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Zona Kiri</div>
+                        <div class="text-center text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase px-4 sm:px-8 mb-2">Zona Tengah</div>
+                        <div class="text-left text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Zona Kanan</div>
 
-                            <div class="flex items-center gap-0.5 sm:gap-1">
-                                @for ($col = 1; $col <= $venue->total_columns; $col++)
-                                    @php
-                                        $key = $row . '-' . $col;
-                                        $seatAvail = $seatAvailabilities[$key] ?? null;
-                                    @endphp
+                        @foreach($groupedSeatsByRow as $rowLetter => $zones)
+                            <!-- ZONA KIRI -->
+                            <div class="flex items-center gap-1 sm:gap-1.5 justify-end border-b border-slate-100 pb-1.5 min-h-[36px]">
+                                @if(!empty($zones['L']))
+                                    <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-end">
+                                        @foreach($zones['L'] as $seatAvail)
+                                            @php
+                                                $seatMaster = $seatAvail->seatMaster;
+                                                $ticket = $seatAvail->ticket;
 
-                                    @if ($seatAvail)
-                                        @php
-                                            $seatMaster = $seatAvail->seatMaster;
-                                            $category = $seatMaster->seatCategory;
-                                            $ticket = $seatAvail->ticket;
+                                                $isAttended = $ticket && $ticket->status === 'used';
+                                                $isPending = $ticket && $ticket->status === 'valid';
+                                                $isLocked = ($seatAvail->status === 'locked');
+                                                $isSold = ($seatAvail->status === 'sold');
+                                            @endphp
 
-                                            $isAttended = $ticket && $ticket->status === 'used';
-                                            $isPending = $ticket && $ticket->status === 'valid';
-                                            $isLocked = ($seatAvail->status === 'locked');
-                                            $isSold = ($seatAvail->status === 'sold');
-                                        @endphp
-
-                                        @if (!$seatMaster->is_active)
-                                            <!-- Inactive seat / Aisle gap -->
-                                            <div class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 opacity-0"></div>
-                                        @else
                                             <button 
                                                 type="button"
                                                 wire:click="showSeatDetail({{ $seatAvail->id }})"
                                                 title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @else (Tersedia) @endif"
-                                                class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 rounded text-[7px] sm:text-[9px] md:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-125 active:scale-95 shadow-xs relative group
+                                                class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
                                                     @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
                                             >
                                                 @if ($isAttended)
                                                     <span>✓</span>
                                                 @else
-                                                    {{ $seatMaster->col_num }}
+                                                    {{ (int)$seatMaster->col_num }}
                                                 @endif
 
                                                 <!-- Tooltip on Hover -->
@@ -199,18 +194,91 @@
                                                     {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @else TERSEDIA 🛋️ @endif
                                                 </span>
                                             </button>
-                                        @endif
-                                    @else
-                                        <div class="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 opacity-0"></div>
-                                    @endif
-                                @endfor
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
 
-                            <!-- Row Label Right -->
-                            <span class="w-4 sm:w-5 text-[10px] sm:text-xs font-bold text-slate-600 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
-                        </div>
-                    @endfor
+                            <!-- ZONA TENGAH -->
+                            <div class="flex items-center gap-1 sm:gap-1.5 justify-center border-b border-slate-100 border-l border-r border-slate-200 px-2 sm:px-4 pb-1.5 min-h-[36px]">
+                                @if(!empty($zones['C']))
+                                    <span class="w-5 sm:w-6 text-[10px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-center">
+                                        @foreach($zones['C'] as $seatAvail)
+                                            @php
+                                                $seatMaster = $seatAvail->seatMaster;
+                                                $ticket = $seatAvail->ticket;
 
+                                                $isAttended = $ticket && $ticket->status === 'used';
+                                                $isPending = $ticket && $ticket->status === 'valid';
+                                                $isLocked = ($seatAvail->status === 'locked');
+                                                $isSold = ($seatAvail->status === 'sold');
+                                            @endphp
+
+                                            <button 
+                                                type="button"
+                                                wire:click="showSeatDetail({{ $seatAvail->id }})"
+                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @else (Tersedia) @endif"
+                                                class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
+                                                    @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
+                                            >
+                                                @if ($isAttended)
+                                                    <span>✓</span>
+                                                @else
+                                                    {{ (int)$seatMaster->col_num }}
+                                                @endif
+
+                                                <!-- Tooltip on Hover -->
+                                                <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-md font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30 border border-slate-700 shadow-xl">
+                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @else TERSEDIA 🛋️ @endif
+                                                </span>
+                                            </button>
+                                        @endforeach
+                                    </div>
+                                    <span class="w-5 sm:w-6 text-[10px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                @endif
+                            </div>
+
+                            <!-- ZONA KANAN -->
+                            <div class="flex items-center gap-1 sm:gap-1.5 justify-start border-b border-slate-100 pb-1.5 min-h-[36px]">
+                                @if(!empty($zones['R']))
+                                    <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-start">
+                                        @foreach($zones['R'] as $seatAvail)
+                                            @php
+                                                $seatMaster = $seatAvail->seatMaster;
+                                                $ticket = $seatAvail->ticket;
+
+                                                $isAttended = $ticket && $ticket->status === 'used';
+                                                $isPending = $ticket && $ticket->status === 'valid';
+                                                $isLocked = ($seatAvail->status === 'locked');
+                                                $isSold = ($seatAvail->status === 'sold');
+                                            @endphp
+
+                                            <button 
+                                                type="button"
+                                                wire:click="showSeatDetail({{ $seatAvail->id }})"
+                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @else (Tersedia) @endif"
+                                                class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
+                                                    @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
+                                            >
+                                                @if ($isAttended)
+                                                    <span>✓</span>
+                                                @else
+                                                    {{ (int)$seatMaster->col_num }}
+                                                @endif
+
+                                                <!-- Tooltip on Hover -->
+                                                <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-md font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30 border border-slate-700 shadow-xl">
+                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @else TERSEDIA 🛋️ @endif
+                                                </span>
+                                            </button>
+                                        @endforeach
+                                    </div>
+                                    <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
