@@ -21,7 +21,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->string('event_category')->default('Pertunjukan');
             $table->integer('payment_verification_timeout_hours')->default(24);
-            $table->enum('status', ['draft', 'published', 'completed', 'cancelled'])->default('draft');
+            $table->enum('status', ['draft', 'published', 'registration', 'ongoing', 'completed', 'cancelled'])->default('draft');
             $table->timestamps();
         });
     }

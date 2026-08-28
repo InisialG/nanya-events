@@ -145,6 +145,11 @@ class SeatSelection extends Component
             return redirect()->route('login')->with('error', 'Silakan masuk terlebih dahulu untuk mengunci kursi.');
         }
 
+        if (in_array($this->event->status, ['ongoing', 'finished', 'coming_soon'])) {
+            session()->flash('error', 'Pemesanan tiket sedang ditutup.');
+            return;
+        }
+
         $seatAvail = SeatAvailability::select('id', 'event_session_id', 'seat_master_id', 'status', 'locked_until')
             ->where('id', $seatAvailabilityId)
             ->where('event_session_id', $this->sessionId)

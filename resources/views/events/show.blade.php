@@ -174,6 +174,11 @@
                             <svg class="w-5 h-5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span>Pendaftaran / Registrasi Kursi Belum Dibuka (Coming Soon)</span>
                         </div>
+                    @elseif($event->status === 'ongoing')
+                        <div class="w-full py-4 px-6 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm cursor-not-allowed">
+                            <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Pendaftaran Ditutup (Pertunjukan Sedang Berlangsung)</span>
+                        </div>
                     @elseif($event->status === 'finished')
                         <div class="w-full py-4 px-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-500 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm cursor-not-allowed">
                             <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
