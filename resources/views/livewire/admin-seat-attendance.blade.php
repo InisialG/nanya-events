@@ -179,7 +179,7 @@
                                             <button 
                                                 type="button"
                                                 wire:click="showSeatDetail({{ $seatAvail->id }})"
-                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @else (Tersedia) @endif"
+                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @elseif($isSold) (Terjual) @elseif($isLocked) (Dikunci) @else (Tersedia) @endif"
                                                 class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
                                                     @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
                                             >
@@ -191,7 +191,7 @@
 
                                                 <!-- Tooltip on Hover -->
                                                 <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-md font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30 border border-slate-700 shadow-xl">
-                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @else TERSEDIA 🛋️ @endif
+                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @elseif($isSold) TERJUAL 🎟️ @elseif($isLocked) DIKUNCI 🔒 @else TERSEDIA 🛋️ @endif
                                                 </span>
                                             </button>
                                         @endforeach
@@ -218,7 +218,7 @@
                                             <button 
                                                 type="button"
                                                 wire:click="showSeatDetail({{ $seatAvail->id }})"
-                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @else (Tersedia) @endif"
+                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @elseif($isSold) (Terjual) @elseif($isLocked) (Dikunci) @else (Tersedia) @endif"
                                                 class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
                                                     @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
                                             >
@@ -230,7 +230,7 @@
 
                                                 <!-- Tooltip on Hover -->
                                                 <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-md font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30 border border-slate-700 shadow-xl">
-                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @else TERSEDIA 🛋️ @endif
+                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @elseif($isSold) TERJUAL 🎟️ @elseif($isLocked) DIKUNCI 🔒 @else TERSEDIA 🛋️ @endif
                                                 </span>
                                             </button>
                                         @endforeach
@@ -257,7 +257,7 @@
                                             <button 
                                                 type="button"
                                                 wire:click="showSeatDetail({{ $seatAvail->id }})"
-                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @else (Tersedia) @endif"
+                                                title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @elseif($isSold) (Terjual) @elseif($isLocked) (Dikunci) @else (Tersedia) @endif"
                                                 class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
                                                     @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
                                             >
@@ -269,7 +269,7 @@
 
                                                 <!-- Tooltip on Hover -->
                                                 <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[10px] rounded-md font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-30 border border-slate-700 shadow-xl">
-                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @else TERSEDIA 🛋️ @endif
+                                                    {{ $seatMaster->seat_code }} • @if($isAttended) HADIR ✅ @elseif($isPending) BELUM HADIR ⏳ @elseif($isSold) TERJUAL 🎟️ @elseif($isLocked) DIKUNCI 🔒 @else TERSEDIA 🛋️ @endif
                                                 </span>
                                             </button>
                                         @endforeach
