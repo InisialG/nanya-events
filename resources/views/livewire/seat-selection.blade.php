@@ -220,6 +220,13 @@
                                         <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
                                     @endif
                                 </div>
+
+                                @if($rowLetter === 'H')
+                                    <!-- Walkway / Gang Tengah -->
+                                    <div class="col-span-3 h-8 sm:h-12 w-full flex items-center justify-center my-1 sm:my-2 bg-slate-100/50 rounded-lg">
+                                        <span class="text-[9px] sm:text-[10px] text-slate-400 tracking-[0.5em] uppercase font-bold">Jalan Lintas / Walkway</span>
+                                    </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
