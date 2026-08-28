@@ -328,13 +328,41 @@ class SeatSelection extends Component
     {
         $seatAvailabilities = SeatAvailability::with('seatMaster.seatCategory')
             ->where('event_session_id', $this->sessionId)
-            ->get()
-            ->keyBy(function ($item) {
-                return $item->seatMaster->row_num . '-' . $item->seatMaster->col_num;
-            });
+            ->get();
+
+        $groupedSeatsByRow = [];
+        $rowLetters = ['A','B','C','D','E','F','G','H','J','K','L','M','N','P','R','S','T'];
+        foreach ($rowLetters as $rl) {
+             $groupedSeatsByRow[$rl] = ['L' => [], 'C' => [], 'R' => []];
+        }
+
+        foreach ($seatAvailabilities as $avail) {
+            $code = $avail->seatMaster->seat_code;
+            if (preg_match('/^([LCR])-([A-Z]+)(\d+)$/', $code, $matches)) {
+                $zone = $matches[1];
+                $rowLetter = $matches[2];
+                $groupedSeatsByRow[$rowLetter][$zone][] = $avail;
+            }
+        }
+
+        foreach ($groupedSeatsByRow as $row => &$zones) {
+            foreach (['L', 'C', 'R'] as $z) {
+                usort($zones[$z], function($a, $b) {
+                    return $b->seatMaster->col_num <=> $a->seatMaster->col_num;
+                });
+            }
+        }
+
+        // Hapus baris yang kosong di semua zona agar tidak render ruang kosong
+        foreach ($groupedSeatsByRow as $row => $zones) {
+            if (empty($zones['L']) && empty($zones['C']) && empty($zones['R'])) {
+                unset($groupedSeatsByRow[$row]);
+            }
+        }
 
         return view('livewire.seat-selection', [
             'seatAvailabilities' => $seatAvailabilities,
+            'groupedSeatsByRow' => $groupedSeatsByRow,
         ])->layout('layouts.app');
     }
 }

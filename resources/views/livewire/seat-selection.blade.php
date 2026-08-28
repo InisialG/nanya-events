@@ -125,59 +125,103 @@
                             </div>
                         </div>
 
-                        @for ($row = 1; $row <= $venue->total_rows; $row++)
-                            @php $rowLetter = \App\Models\SeatMaster::rowNumToLetter($row); @endphp
-                            <div class="flex items-center gap-1 sm:gap-1.5">
-                                <!-- Row Label Left -->
-                                <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-600 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                        <!-- Global Grid Container untuk Lorong Vertikal Lurus -->
+                        <div class="grid grid-cols-[1fr_auto_1fr] gap-x-4 sm:gap-x-8 gap-y-1 sm:gap-y-1.5 w-full min-w-max mt-4">
+                            <!-- Headers Zona -->
+                            <div class="text-right text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Zona Kiri</div>
+                            <div class="text-center text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase px-4 sm:px-8 mb-2">Zona Tengah</div>
+                            <div class="text-left text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Zona Kanan</div>
 
-                                <div class="flex items-center gap-1 sm:gap-1.5">
-                                    @for ($col = 1; $col <= $venue->total_columns; $col++)
-                                        @php
-                                            $key = $row . '-' . $col;
-                                            $seatAvail = $seatAvailabilities[$key] ?? null;
-                                        @endphp
-
-                                        @if ($seatAvail)
-                                            @php
-                                                $seatMaster = $seatAvail->seatMaster;
-                                                $category = $seatMaster->seatCategory;
-                                                $isSelected = in_array($seatAvail->id, $selectedSeatIds);
-                                                $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && $seatAvail->locked_until > now());
-                                                $bgColor = $category ? $category->color_code : '#00D4E6';
-                                            @endphp
-
-                                            @if (!$seatMaster->is_active)
-                                                <!-- Inactive seat / Aisle gap -->
-                                                <div class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 opacity-0"></div>
-                                            @else
+                            @foreach($groupedSeatsByRow as $rowLetter => $zones)
+                                <!-- ZONA KIRI -->
+                                <div class="flex items-center gap-1 sm:gap-1.5 justify-end border-b border-slate-100 pb-1.5 min-h-[36px]">
+                                    @if(!empty($zones['L']))
+                                        <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                        <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-end">
+                                            @foreach($zones['L'] as $seatAvail)
+                                                @php
+                                                    $seatMaster = $seatAvail->seatMaster;
+                                                    $category = $seatMaster->seatCategory;
+                                                    $isSelected = in_array($seatAvail->id, $selectedSeatIds);
+                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && $seatAvail->locked_until > now());
+                                                    $bgColor = $category ? $category->color_code : '#00D4E6';
+                                                @endphp
                                                 <button 
-                                                    type="button"
-                                                    @click="toggle({{ $seatAvail->id }})"
-                                                    @if($isLockedOrSold) disabled @endif
-                                                    title="Kursi {{ $seatMaster->seat_code }} ({{ $category?->name ?? 'Reguler' }})"
+                                                    type="button" @click="toggle({{ $seatAvail->id }})" @if($isLockedOrSold) disabled @endif
+                                                    title="Kursi {{ $seatMaster->seat_code }}"
                                                     :class="selectedSeatIds.includes({{ $seatAvail->id }}) ? 'bg-emerald-500 text-white ring-4 ring-emerald-500/40 scale-110 shadow-lg z-10' : '{{ $isLockedOrSold ? 'bg-rose-600 text-white border border-rose-500/50 cursor-not-allowed opacity-90' : 'text-slate-900 hover:scale-110 hover:shadow-md cursor-pointer' }}'"
                                                     class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-extrabold flex items-center justify-center transition-all duration-150 touch-manipulation select-none active:scale-95 relative group"
-                                                    :style="selectedSeatIds.includes({{ $seatAvail->id }}) ? '' : '{{ !$isLockedOrSold ? "background-color: {$bgColor}" : '' }}'"
-                                                >
-                                                    {{ $seatMaster->col_num }}
-
-                                                    <!-- Tooltip on Hover / Touch -->
-                                                    <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[9px] rounded font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 border border-slate-700 shadow-xl">
+                                                    :style="selectedSeatIds.includes({{ $seatAvail->id }}) ? '' : '{{ !$isLockedOrSold ? "background-color: {$bgColor}" : '' }}'">
+                                                    {{ (int)$seatMaster->col_num }}
+                                                    <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[9px] rounded font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-xl">
                                                         {{ $seatMaster->seat_code }} • Rp {{ number_format($category?->price ?? 0, 0, ',', '.') }}
                                                     </span>
                                                 </button>
-                                            @endif
-                                        @else
-                                            <div class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 opacity-0"></div>
-                                        @endif
-                                    @endfor
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
 
-                                <!-- Row Label Right -->
-                                <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-600 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
-                            </div>
-                        @endfor
+                                <!-- ZONA TENGAH -->
+                                <div class="flex items-center gap-1 sm:gap-1.5 justify-center border-b border-slate-100 border-l border-r border-slate-200 px-2 sm:px-4 pb-1.5 min-h-[36px]">
+                                    @if(!empty($zones['C']))
+                                        <span class="w-5 sm:w-6 text-[10px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                        <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-center">
+                                            @foreach($zones['C'] as $seatAvail)
+                                                @php
+                                                    $seatMaster = $seatAvail->seatMaster;
+                                                    $category = $seatMaster->seatCategory;
+                                                    $isSelected = in_array($seatAvail->id, $selectedSeatIds);
+                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && $seatAvail->locked_until > now());
+                                                    $bgColor = $category ? $category->color_code : '#00D4E6';
+                                                @endphp
+                                                <button 
+                                                    type="button" @click="toggle({{ $seatAvail->id }})" @if($isLockedOrSold) disabled @endif
+                                                    title="Kursi {{ $seatMaster->seat_code }}"
+                                                    :class="selectedSeatIds.includes({{ $seatAvail->id }}) ? 'bg-emerald-500 text-white ring-4 ring-emerald-500/40 scale-110 shadow-lg z-10' : '{{ $isLockedOrSold ? 'bg-rose-600 text-white border border-rose-500/50 cursor-not-allowed opacity-90' : 'text-slate-900 hover:scale-110 hover:shadow-md cursor-pointer' }}'"
+                                                    class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-extrabold flex items-center justify-center transition-all duration-150 touch-manipulation select-none active:scale-95 relative group"
+                                                    :style="selectedSeatIds.includes({{ $seatAvail->id }}) ? '' : '{{ !$isLockedOrSold ? "background-color: {$bgColor}" : '' }}'">
+                                                    {{ (int)$seatMaster->col_num }}
+                                                    <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[9px] rounded font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-xl">
+                                                        {{ $seatMaster->seat_code }} • Rp {{ number_format($category?->price ?? 0, 0, ',', '.') }}
+                                                    </span>
+                                                </button>
+                                            @endforeach
+                                        </div>
+                                        <span class="w-5 sm:w-6 text-[10px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    @endif
+                                </div>
+
+                                <!-- ZONA KANAN -->
+                                <div class="flex items-center gap-1 sm:gap-1.5 justify-start border-b border-slate-100 pb-1.5 min-h-[36px]">
+                                    @if(!empty($zones['R']))
+                                        <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-start">
+                                            @foreach($zones['R'] as $seatAvail)
+                                                @php
+                                                    $seatMaster = $seatAvail->seatMaster;
+                                                    $category = $seatMaster->seatCategory;
+                                                    $isSelected = in_array($seatAvail->id, $selectedSeatIds);
+                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && $seatAvail->locked_until > now());
+                                                    $bgColor = $category ? $category->color_code : '#00D4E6';
+                                                @endphp
+                                                <button 
+                                                    type="button" @click="toggle({{ $seatAvail->id }})" @if($isLockedOrSold) disabled @endif
+                                                    title="Kursi {{ $seatMaster->seat_code }}"
+                                                    :class="selectedSeatIds.includes({{ $seatAvail->id }}) ? 'bg-emerald-500 text-white ring-4 ring-emerald-500/40 scale-110 shadow-lg z-10' : '{{ $isLockedOrSold ? 'bg-rose-600 text-white border border-rose-500/50 cursor-not-allowed opacity-90' : 'text-slate-900 hover:scale-110 hover:shadow-md cursor-pointer' }}'"
+                                                    class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-extrabold flex items-center justify-center transition-all duration-150 touch-manipulation select-none active:scale-95 relative group"
+                                                    :style="selectedSeatIds.includes({{ $seatAvail->id }}) ? '' : '{{ !$isLockedOrSold ? "background-color: {$bgColor}" : '' }}'">
+                                                    {{ (int)$seatMaster->col_num }}
+                                                    <span class="absolute -top-10 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-slate-900 text-white text-[9px] rounded font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20 shadow-xl">
+                                                        {{ $seatMaster->seat_code }} • Rp {{ number_format($category?->price ?? 0, 0, ',', '.') }}
+                                                    </span>
+                                                </button>
+                                            @endforeach
+                                        </div>
+                                        <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
