@@ -350,9 +350,9 @@ class SeatSelection extends Component
             }
         }
 
-        foreach ($groupedSeatsByRow as $row => &$zones) {
+        foreach ($groupedSeatsByRow as $row => $zones) {
             foreach (['L', 'C', 'R'] as $z) {
-                usort($zones[$z], function($a, $b) {
+                usort($groupedSeatsByRow[$row][$z], function($a, $b) {
                     return $b->seatMaster->col_num <=> $a->seatMaster->col_num;
                 });
             }
