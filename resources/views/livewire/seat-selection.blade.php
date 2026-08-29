@@ -3,7 +3,7 @@
         viewMode: 'interactive', 
         zoomModal: false, 
         zoomScale: 1, 
-        selectedSeatIds: @entangle('selectedSeatIds').live,
+        selectedSeatIds: @entangle('selectedSeatIds'),
         toggle(id) {
             if (this.selectedSeatIds.includes(id)) {
                 this.selectedSeatIds = this.selectedSeatIds.filter(i => i !== id);
@@ -134,7 +134,7 @@
 
                             @foreach($groupedSeatsByRow as $rowLetter => $zones)
                                 <!-- ZONA KIRI -->
-                                <div class="flex items-center gap-1 sm:gap-1.5 justify-end border-b border-slate-100 pb-1.5 min-h-[36px]">
+                                <div class="flex items-center gap-1 sm:gap-1.5 justify-end border-b border-slate-100 pb-1.5 min-h-[36px]" wire:key="zone-L-{{ $rowLetter }}">
                                     @if(!empty($zones['L']))
                                         <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
                                         <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-end">
@@ -147,6 +147,7 @@
                                                     $bgColor = $category ? $category->color_code : '#00D4E6';
                                                 @endphp
                                                 <button 
+                                                    wire:key="seat-{{ $seatAvail->id }}"
                                                     type="button" @click="toggle({{ $seatAvail->id }})" @if($isLockedOrSold) disabled @endif
                                                     title="Kursi {{ $seatMaster->seat_code }}"
                                                     :class="selectedSeatIds.includes({{ $seatAvail->id }}) ? 'bg-emerald-500 text-white ring-4 ring-emerald-500/40 scale-110 shadow-lg z-10' : '{{ $isLockedOrSold ? 'bg-rose-600 text-white border border-rose-500/50 cursor-not-allowed opacity-90' : 'text-slate-900 hover:scale-110 hover:shadow-md cursor-pointer' }}'"
@@ -163,7 +164,7 @@
                                 </div>
 
                                 <!-- ZONA TENGAH -->
-                                <div class="flex items-center gap-1 sm:gap-1.5 justify-center border-b border-slate-100 border-l border-r border-slate-200 px-2 sm:px-4 pb-1.5 min-h-[36px]">
+                                <div class="flex items-center gap-1 sm:gap-1.5 justify-center border-b border-slate-100 border-l border-r border-slate-200 px-2 sm:px-4 pb-1.5 min-h-[36px]" wire:key="zone-C-{{ $rowLetter }}">
                                     @if(!empty($zones['C']))
                                         <span class="w-5 sm:w-6 text-[10px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
                                         <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-center">
@@ -176,6 +177,7 @@
                                                     $bgColor = $category ? $category->color_code : '#00D4E6';
                                                 @endphp
                                                 <button 
+                                                    wire:key="seat-{{ $seatAvail->id }}"
                                                     type="button" @click="toggle({{ $seatAvail->id }})" @if($isLockedOrSold) disabled @endif
                                                     title="Kursi {{ $seatMaster->seat_code }}"
                                                     :class="selectedSeatIds.includes({{ $seatAvail->id }}) ? 'bg-emerald-500 text-white ring-4 ring-emerald-500/40 scale-110 shadow-lg z-10' : '{{ $isLockedOrSold ? 'bg-rose-600 text-white border border-rose-500/50 cursor-not-allowed opacity-90' : 'text-slate-900 hover:scale-110 hover:shadow-md cursor-pointer' }}'"
@@ -193,7 +195,7 @@
                                 </div>
 
                                 <!-- ZONA KANAN -->
-                                <div class="flex items-center gap-1 sm:gap-1.5 justify-start border-b border-slate-100 pb-1.5 min-h-[36px]">
+                                <div class="flex items-center gap-1 sm:gap-1.5 justify-start border-b border-slate-100 pb-1.5 min-h-[36px]" wire:key="zone-R-{{ $rowLetter }}">
                                     @if(!empty($zones['R']))
                                         <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-start">
                                             @foreach($zones['R'] as $seatAvail)
@@ -205,6 +207,7 @@
                                                     $bgColor = $category ? $category->color_code : '#00D4E6';
                                                 @endphp
                                                 <button 
+                                                    wire:key="seat-{{ $seatAvail->id }}"
                                                     type="button" @click="toggle({{ $seatAvail->id }})" @if($isLockedOrSold) disabled @endif
                                                     title="Kursi {{ $seatMaster->seat_code }}"
                                                     :class="selectedSeatIds.includes({{ $seatAvail->id }}) ? 'bg-emerald-500 text-white ring-4 ring-emerald-500/40 scale-110 shadow-lg z-10' : '{{ $isLockedOrSold ? 'bg-rose-600 text-white border border-rose-500/50 cursor-not-allowed opacity-90' : 'text-slate-900 hover:scale-110 hover:shadow-md cursor-pointer' }}'"
