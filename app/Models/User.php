@@ -47,6 +47,15 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
+     * Check if user is a Super Admin.
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasAnyRole(['Super Admin', 'super_admin', 'superadmin']) 
+            || str_contains(strtolower($this->email), 'superadmin@');
+    }
+
+    /**
      * Check if user is Panitia (Ticket Scanner Operator).
      */
     public function isPanitia(): bool

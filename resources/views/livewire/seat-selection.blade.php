@@ -344,6 +344,7 @@
                                 <svg class="w-4 h-4 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                             </button>
 
+                            @if (Auth::user()->isSuperAdmin())
                             <button 
                                 wire:click="resetAllSeatsInSession"
                                 wire:confirm="Apakah Anda yakin ingin MENGOSONGKAN SELURUH KURSI pada sesi ini menjadi Tersedia kembali?"
@@ -351,6 +352,7 @@
                                 class="w-full py-2.5 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-extrabold text-xs text-center transition-all flex items-center justify-center gap-2 cursor-pointer">
                                 <span>Reset Semua Kursi (Buka Semua)</span>
                             </button>
+                            @endif
                         </div>
                     @endif
                 </div>

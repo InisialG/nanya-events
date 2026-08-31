@@ -114,8 +114,8 @@ class SeatSelection extends Component
 
     public function resetAllSeatsInSession()
     {
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
-            session()->flash('error', 'Akses ditolak. Hanya Admin yang dapat mereset status kursi.');
+        if (!Auth::check() || !Auth::user()->isSuperAdmin()) {
+            session()->flash('error', 'Akses ditolak. Hanya Super Admin yang dapat mereset seluruh status kursi.');
             return;
         }
 

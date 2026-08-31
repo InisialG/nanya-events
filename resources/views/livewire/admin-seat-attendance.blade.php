@@ -36,7 +36,7 @@
                 <span>Scanner QR</span>
             </a>
 
-            @if (Auth::check() && Auth::user()->isAdmin())
+            @if (Auth::check() && Auth::user()->isSuperAdmin())
                 <button 
                     wire:click="resetAllSeatsInSession" 
                     wire:confirm="Apakah Anda yakin ingin mengosongkan SELURUH STATUS KURSI pada sesi ini menjadi Tersedia (Kosong) kembali?"
