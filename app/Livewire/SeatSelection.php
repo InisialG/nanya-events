@@ -81,6 +81,7 @@ class SeatSelection extends Component
         // Auto-release locked seats whose locked_until has passed
         SeatAvailability::where('event_session_id', $this->sessionId)
             ->where('status', 'locked')
+            ->whereNull('order_id')
             ->where('locked_until', '<', now())
             ->update([
                 'status' => 'available',
@@ -98,6 +99,7 @@ class SeatSelection extends Component
         SeatAvailability::whereIn('id', $this->selectedSeatIds)
             ->where('event_session_id', $this->sessionId)
             ->where('status', 'locked')
+            ->whereNull('order_id')
             ->update([
                 'status' => 'available',
                 'locked_until' => null,

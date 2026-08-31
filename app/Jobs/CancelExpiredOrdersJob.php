@@ -20,7 +20,7 @@ class CancelExpiredOrdersJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $expiredOrders = Order::whereIn('status', ['pending_payment', 'waiting_verification'])
+        $expiredOrders = Order::where('status', 'pending_payment')
             ->where('expired_at', '<', now())
             ->get();
 

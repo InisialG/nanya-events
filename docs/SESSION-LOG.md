@@ -419,6 +419,17 @@ Jika Anda baru saja membuka session ini, berikut adalah 4 poin utama yang harus 
 1. **Penyusunan Dokumen PRD Pengujian Performa**:
    - `[NEW]` [docs/04-PRD-TESTING-FLASH-SALE.md](file:///e:/laragon/www/nanya-events/docs/04-PRD-TESTING-FLASH-SALE.md) (Menyusun panduan pengujian lonjakan trafik, simulasi concurrent checkout, dan rekomendasi script k6 untuk load testing).
 
+### 🗓️ Session 34 — 31 Agustus 2026
+**Fokus**: Perbaikan Bug Logika Pembatalan Otomatis Pesanan pada Job Cron & Checkout Controller.
+
+#### ✅ Tugas yang Telah Selesai:
+1. **Perbaikan Logika `CancelExpiredOrdersJob.php`**:
+   - `[MODIFIED]` [app/Jobs/CancelExpiredOrdersJob.php](file:///e:/laragon/www/nanya-events/app/Jobs/CancelExpiredOrdersJob.php) (Menghapus status `waiting_verification` dari array kondisi, sehingga sistem tidak lagi membatalkan pesanan secara sepihak ketika penonton sudah mengunggah bukti bayar namun admin belum menyetujui dalam 24 jam).
+2. **Perbaikan Pengecekan Expired di `CheckoutController.php`**:
+   - `[MODIFIED]` [app/Http/Controllers/CheckoutController.php](file:///e:/laragon/www/nanya-events/app/Http/Controllers/CheckoutController.php) (Menyesuaikan kondisi pembatalan order agar hanya berlaku jika statusnya `pending_payment` & `expired_at < now()`, memastikan order `waiting_verification` tidak mengalami pembatalan pasif saat halaman instruksi atau upload bukti di-refresh).
+3. **Perbaikan Kerentanan Pelepasan Kursi pada `SeatSelection.php` (Stale Tab Polling Bug)**:
+   - `[MODIFIED]` [app/Livewire/SeatSelection.php](file:///e:/laragon/www/nanya-events/app/Livewire/SeatSelection.php) (Menambahkan validasi ketat `whereNull('order_id')` pada fungsi `cleanupExpiredLocks` dan `clearAllSelectedSeats`. Sebelumnya, jika penonton membiarkan halaman pemilihan kursi terbuka di tab lain sementara mereka sudah berada di halaman pembayaran, fitur polling otomatis (setiap 2 detik) atau klik reset secara tidak sengaja dapat secara paksa melepaskan status `locked` pada kursi mereka yang sudah berstatus pesanan aktif, sehingga kursi lenyap secara sepihak sebelum 24 jam berlalu).
+
 ---
 
 ## 🚀 Status Akhir Project (Project Complete)

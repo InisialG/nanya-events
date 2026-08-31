@@ -170,7 +170,7 @@ class CheckoutController extends Controller
             ->firstOrFail();
 
         // Check if expired
-        if (in_array($order->status, ['pending_payment', 'waiting_verification']) && $order->expired_at < now()) {
+        if ($order->status === 'pending_payment' && $order->expired_at < now()) {
             DB::transaction(function () use ($order) {
                 $order->update(['status' => 'cancelled']);
                 SeatAvailability::where('order_id', $order->id)
@@ -201,7 +201,7 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        if ($order->status === 'cancelled' || $order->expired_at < now()) {
+        if ($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at < now())) {
             return redirect()->route('events.index')->with('error', 'Waktu pembayaran telah habis (expired).');
         }
 
@@ -271,7 +271,7 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        if ($order->status === 'cancelled' || $order->expired_at < now()) {
+        if ($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at < now())) {
             return response()->json(['success' => false, 'error' => 'Waktu pembayaran telah habis (expired).'], 403);
         }
 
@@ -331,7 +331,7 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        if ($order->status === 'cancelled' || $order->expired_at < now()) {
+        if ($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at < now())) {
             return response()->json(['success' => false, 'message' => 'Waktu pembayaran telah habis (expired).'], 403);
         }
 
