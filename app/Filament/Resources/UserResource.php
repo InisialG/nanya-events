@@ -90,8 +90,7 @@ class UserResource extends Resource
                         'panitia' => 'warning',
                         default => 'info',
                     })
-                    ->default('User')
-                    ->sortable(),
+                    ->default('User'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal Terdaftar')
