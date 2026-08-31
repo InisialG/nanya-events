@@ -19,7 +19,7 @@ class ListOrders extends ListRecords
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('success')
                 ->action(function () {
-                    $orders = \App\Models\Order::with(['user', 'payment'])->latest()->get();
+                    $orders = \App\Models\Order::with(['user', 'payment', 'seatAvailabilities.seatMaster'])->latest()->get();
                     
                     $filename = 'Laporan_Order_NanyaEvents_' . date('Y-m-d_H-i-s') . '.xls';
                     
@@ -36,6 +36,7 @@ class ListOrders extends ListRecords
                         echo '<thead style="background-color: #f3f4f6; font-weight: bold;">';
                         echo '<tr>';
                         echo '<th>No. Order</th>';
+                        echo '<th>Kursi Dipesan</th>';
                         echo '<th>Nama Pemesan</th>';
                         echo '<th>Email</th>';
                         echo '<th>No. WhatsApp / HP</th>';
@@ -57,8 +58,14 @@ class ListOrders extends ListRecords
                                 'cancelled' => 'Dibatalkan',
                             ];
 
+                            $bookedSeats = $order->seatAvailabilities
+                                ->map(fn($sa) => $sa->seatMaster?->seat_code)
+                                ->filter()
+                                ->implode(', ');
+
                             echo '<tr>';
                             echo '<td>' . $order->order_code . '</td>';
+                            echo '<td>' . ($bookedSeats ?: '-') . '</td>';
                             echo '<td>' . ($order->user?->name ?? 'Penonton') . '</td>';
                             echo '<td>' . ($order->user?->email ?? '-') . '</td>';
                             echo '<td>' . ($order->user?->phone_number ?? '-') . '</td>';
