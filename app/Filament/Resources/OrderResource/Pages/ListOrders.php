@@ -10,6 +10,16 @@ class ListOrders extends ListRecords
 {
     protected static string $resource = OrderResource::class;
 
+    public function mount(): void
+    {
+        parent::mount();
+        
+        // Auto-cancel expired orders & release seats every time admin opens this page
+        // so that the admin view is always up to date even without Cron jobs.
+        \App\Jobs\CancelExpiredOrdersJob::dispatchSync();
+        \App\Jobs\ReleaseExpiredSeatsJob::dispatchSync();
+    }
+
     protected function getHeaderActions(): array
     {
         return [

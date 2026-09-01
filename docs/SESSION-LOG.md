@@ -434,7 +434,16 @@ Jika Anda baru saja membuka session ini, berikut adalah 4 poin utama yang harus 
 
 ## 🚀 Status Akhir Project (Project Complete)
 
-Seluruh roadmap pengembangan **Nanya Events (Fase 1 s/d Fase 7 + Reset Password + Poster Denah + Redesign + Hapus Kode Unik + Form Bukti Wajib + Fix Banner Notifikasi + Auto Redirect Paid Order + Pratinjau Bukti Transfer Compact Admin + ActionGroup Table + Restriksi Order Admin + Status Event Khusus + Relokasi Badge Status + Fix 404 Denah Kursi + Redesign Light Theme #F37032 + Fitur Multi-Print Tiket Sekaligus)** telah 100% selesai dikerjakan, diuji, dan didokumentasikan dengan sempurna. Sistem siap digunakan baik dari sisi Admin/Super Admin Panel maupun Frontend Publik Penonton.
+Seluruh roadmap pengembangan **Nanya Events (Fase 1 s/d Fase 7 + Reset Password + Poster Denah + Redesign + Hapus Kode Unik + Form Bukti Wajib + Fix Banner Notifikasi + Auto Redirect Paid Order + Pratinjau Bukti Transfer Compact Admin + ActionGroup Table + Restriksi Order Admin + Status Event Khusus + Relokasi Badge Status + Fix 404 Denah Kursi + Redesign Light Theme #F37032 + Fitur Multi-Print Tiket Sekaligus + Auto-Cancel Expired Orders Admin)** telah 100% selesai dikerjakan, diuji, dan didokumentasikan dengan sempurna. Sistem siap digunakan baik dari sisi Admin/Super Admin Panel maupun Frontend Publik Penonton.
+
+### 🗓️ Session 35 — 1 September 2026
+**Fokus**: Pembersihan Otomatis Order & Kursi Kadaluwarsa pada Tampilan Admin Tanpa Cron Job.
+
+#### ✅ Tugas yang Telah Selesai:
+1. **Auto-Cancel di Halaman Order (`ListOrders.php`)**:
+   - `[MODIFIED]` [app/Filament/Resources/OrderResource/Pages/ListOrders.php](file:///e:/laragon/www/nanya-events/app/Filament/Resources/OrderResource/Pages/ListOrders.php) (Menambahkan method `mount()` untuk menjalankan `CancelExpiredOrdersJob::dispatchSync()` dan `ReleaseExpiredSeatsJob::dispatchSync()` secara sinkron sesaat sebelum tabel order di-load, memastikan admin tidak melihat data usang dari order yang sudah kedaluwarsa).
+2. **Auto-Cleanup di Live Attendance (`AdminSeatAttendance.php`)**:
+   - `[MODIFIED]` [app/Livewire/AdminSeatAttendance.php](file:///e:/laragon/www/nanya-events/app/Livewire/AdminSeatAttendance.php) (Menambahkan trigger job kebersihan otomatis pada method `mount()` sehingga indikator denah kehadiran kursi selalu akurat meskipun server menggunakan *Shared Hosting* tanpa Cron Task/Worker yang aktif di background).
 
 ---
 

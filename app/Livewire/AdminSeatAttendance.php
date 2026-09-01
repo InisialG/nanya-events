@@ -18,6 +18,10 @@ class AdminSeatAttendance extends Component
 
     public function mount(?int $sessionId = null)
     {
+        // Auto-cleanup expired orders and seats when Admin loads this page
+        \App\Jobs\CancelExpiredOrdersJob::dispatchSync();
+        \App\Jobs\ReleaseExpiredSeatsJob::dispatchSync();
+
         if ($sessionId) {
             $this->sessionId = $sessionId;
         } else {
