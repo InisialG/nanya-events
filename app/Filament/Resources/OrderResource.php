@@ -112,7 +112,6 @@ class OrderResource extends Resource
                             ->multiple()
                             ->searchable()
                             ->required()
-                            ->dehydrated(false)
                             ->options(function (string $operation, ?Order $record) {
                                 if (!$record) return [];
                                 return \App\Models\SeatAvailability::with('seatMaster.seatCategory')
