@@ -11,9 +11,9 @@
 |---|---|
 | **Nama Aplikasi** | Nanya Events — Platform Tiket & Booking Kursi Event Pentas Seni |
 | **Fase Saat Ini** | **Project Complete — Seluruh Roadmap 100% Selesai & Custom Denah Presisi** |
-| **Tugas Terakhir** | Perbaikan Bug Fatal Tiket Expired pada `CheckoutController` (Validasi Batas Waktu Bayar & Blokir Akses Unggah Bukti) |
+| **Tugas Terakhir** | Perbaikan Bug Fatal TOCTOU Race Condition "Kursi Lepas" pada `SeatSelection` (Atomic Update) |
 | **Progress Total** | 🟢 **Dokumentasi: 100%** \| 🟢 **Fase 1: 100%** \| 🟢 **Fase 2: 100%** \| 🟢 **Fase 3: 100%** \| 🟢 **Fase 4: 100%** \| 🟢 **Fase 5: 100%** \| 🟢 **Fase 6: 100%** \| 🟢 **Fase 7 (QR, Reset Password, & Custom Map): 100%** |
-| **Tanggal Pembaruan** | 18 Agustus 2026 |
+| **Tanggal Pembaruan** | 02 September 2026 |
 
 ---
 
@@ -454,3 +454,11 @@ Setiap kali menyelesaikan sebuah tugas di masa mendatang, lakukan langkah beriku
 2. Ubah persentase kemajuan dan status pada tabel `## ⚡ Status Ringkas Project`.
 3. Perbarui `## ⏭️ Langkah Selanjutnya` agar mengarahkan ke tugas berikutnya yang belum selesai.
 4. Tandai `[x]` pada task terkait di [docs/02-ROADMAP-TASKS.md](file:///e:/laragon/www/nanya-events/docs/02-ROADMAP-TASKS.md).
+
+### ??? Session 35 � 02 September 2026
+**Fokus**: Fitur Modifikasi Pilihan Kursi pada Order oleh Admin.
+
+#### ? Tugas yang Telah Selesai:
+1. **Pengembangan Fitur Edit Kursi Admin (OrderResource.php & EditOrder.php)**:
+   - [MODIFIED] [app/Filament/Resources/OrderResource.php](file:///e:/laragon/www/nanya-events/app/Filament/Resources/OrderResource.php) (Menambahkan komponen Select multiple selected_seat_ids yang secara otomatis menampilkan kursi vailable atau yang sudah dimiliki pesanan tersebut. Komponen ini menggantikan tampilan placeholder read-only khusus saat halaman sedang di-edit dan status order adalah pending_payment atau waiting_verification).
+   - [MODIFIED] [app/Filament/Resources/OrderResource/Pages/EditOrder.php](file:///e:/laragon/www/nanya-events/app/Filament/Resources/OrderResource/Pages/EditOrder.php) (Menambahkan hook mutateFormDataBeforeFill untuk mengisi data kursi pesanan saat form dimuat, hook mutateFormDataBeforeSave untuk menghitung ulang tagihan 	otal_amount & inal_amount, serta hook fterSave untuk me-release kursi yang dibuang dan meng-lock kursi baru yang ditambahkan).

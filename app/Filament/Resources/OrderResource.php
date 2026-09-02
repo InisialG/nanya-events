@@ -107,9 +107,33 @@ class OrderResource extends Resource
                             ->default('waiting_verification')
                             ->required(),
 
+                        Components\Select::make('selected_seat_ids')
+                            ->label('Ubah Kursi Dipesan (Hanya muncul jika pesanan belum lunas/dibatalkan)')
+                            ->multiple()
+                            ->searchable()
+                            ->dehydrated(false)
+                            ->options(function (string $operation, ?Order $record) {
+                                if (!$record) return [];
+                                return \App\Models\SeatAvailability::with('seatMaster.seatCategory')
+                                    ->where('event_session_id', $record->event_session_id)
+                                    ->where(function($q) use ($record) {
+                                        $q->where('status', 'available')
+                                          ->orWhere('order_id', $record->id);
+                                    })
+                                    ->get()
+                                    ->mapWithKeys(function($seat) {
+                                        $catName = $seat->seatMaster?->seatCategory?->name ?? 'Unknown';
+                                        $price = number_format($seat->seatMaster?->seatCategory?->price ?? 0, 0, ',', '.');
+                                        $code = $seat->seatMaster?->seat_code ?? '-';
+                                        return [$seat->id => "{$code} - {$catName} (Rp {$price})"];
+                                    });
+                            })
+                            ->visible(fn (string $operation, ?Order $record) => $operation === 'edit' && in_array($record?->status, ['pending_payment', 'waiting_verification']))
+                            ->columnSpanFull(),
+
                         Components\Placeholder::make('seats_detail')
                             ->label('Daftar Kursi Dipesan')
-                            ->visible(fn (?Order $record) => $record !== null)
+                            ->visible(fn (string $operation, ?Order $record) => $record !== null && ($operation !== 'edit' || in_array($record->status, ['paid', 'rejected', 'cancelled'])))
                             ->content(function (?Order $record) {
                                 if (!$record) return '-';
                                 $seats = $record->seatAvailabilities()->with('seatMaster.seatCategory')->get();
