@@ -175,13 +175,20 @@ class SeatSelection extends Component
         if ($seatAvail->status === 'locked') {
             if ($isCurrentlyLockedByMe) {
                 // SAYA YANG KUNCI -> BUKA KUNCI (UNSELECT)
-                DB::transaction(function () use ($seatAvail) {
-                    $seatAvail->update([
+                // (Atomic Update) TOCTOU Race Condition Blocker: Hanya lepas jika order_id masih kosong!
+                $updatedCount = SeatAvailability::where('id', $seatAvail->id)
+                    ->whereNull('order_id')
+                    ->update([
                         'status' => 'available',
                         'order_id' => null,
                         'locked_until' => null,
                     ]);
-                });
+
+                // Jika gagal di-update (artinya order_id sudah diisi oleh proses Checkout yang bersamaan/lebih cepat)
+                if ($updatedCount === 0) {
+                    session()->flash('error', 'Kursi ini sudah masuk ke dalam pesanan/checkout Anda. Selesaikan atau batalkan pesanan Anda terlebih dahulu.');
+                    return;
+                }
 
                 $this->selectedSeatIds = array_values(array_diff($this->selectedSeatIds, [$seatAvailabilityId]));
                 session([$sessionKey => array_values($this->selectedSeatIds)]);
