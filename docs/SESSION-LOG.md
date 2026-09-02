@@ -462,3 +462,12 @@ Setiap kali menyelesaikan sebuah tugas di masa mendatang, lakukan langkah beriku
 1. **Pengembangan Fitur Edit Kursi Admin (OrderResource.php & EditOrder.php)**:
    - [MODIFIED] [app/Filament/Resources/OrderResource.php](file:///e:/laragon/www/nanya-events/app/Filament/Resources/OrderResource.php) (Menambahkan komponen Select multiple selected_seat_ids yang secara otomatis menampilkan kursi vailable atau yang sudah dimiliki pesanan tersebut. Komponen ini menggantikan tampilan placeholder read-only khusus saat halaman sedang di-edit dan status order adalah pending_payment atau waiting_verification).
    - [MODIFIED] [app/Filament/Resources/OrderResource/Pages/EditOrder.php](file:///e:/laragon/www/nanya-events/app/Filament/Resources/OrderResource/Pages/EditOrder.php) (Menambahkan hook mutateFormDataBeforeFill untuk mengisi data kursi pesanan saat form dimuat, hook mutateFormDataBeforeSave untuk menghitung ulang tagihan 	otal_amount & inal_amount, serta hook fterSave untuk me-release kursi yang dibuang dan meng-lock kursi baru yang ditambahkan).
+
+### ??? Session 36 - 02 September 2026
+**Fokus**: Bugfix Fitur Modifikasi Pilihan Kursi pada Order oleh Admin.
+
+#### ? Tugas yang Telah Selesai:
+1. **Memperbaiki Kalkulasi final_amount**:
+   - [MODIFIED] [app/Filament/Resources/OrderResource/Pages/EditOrder.php](file:///e:/laragon/www/nanya-events/app/Filament/Resources/OrderResource/Pages/EditOrder.php) (Memperbaiki bug dimana nilai unique_code hilang ketika Admin mengedit kursi pesanan. Sekarang inal_amount = 	otal_amount + unique_code).
+2. **Validasi Input Kursi Kosong**:
+   - [MODIFIED] [app/Filament/Resources/OrderResource.php](file:///e:/laragon/www/nanya-events/app/Filament/Resources/OrderResource.php) (Menambahkan validasi ->required() pada field selected_seat_ids untuk mencegah Admin secara tidak sengaja mengosongkan seluruh kursi pada sebuah pesanan).

@@ -111,6 +111,7 @@ class OrderResource extends Resource
                             ->label('Ubah Kursi Dipesan (Hanya muncul jika pesanan belum lunas/dibatalkan)')
                             ->multiple()
                             ->searchable()
+                            ->required()
                             ->dehydrated(false)
                             ->options(function (string $operation, ?Order $record) {
                                 if (!$record) return [];

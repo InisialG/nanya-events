@@ -38,7 +38,7 @@ class EditOrder extends EditRecord
                     $totalAmount += $seat->seatMaster?->seatCategory?->price ?? 0;
                 }
                 $data['total_amount'] = $totalAmount;
-                $data['final_amount'] = $totalAmount;
+                $data['final_amount'] = $totalAmount + $this->record->unique_code;
             }
             
             unset($data['selected_seat_ids']);
