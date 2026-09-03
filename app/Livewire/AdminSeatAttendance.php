@@ -176,6 +176,7 @@ class AdminSeatAttendance extends Component
                     });
                 }
             }
+            unset($zones); // Fix PHP reference bug
 
             foreach ($groupedSeatsByRow as $row => $zones) {
                 if (empty($zones['L']) && empty($zones['C']) && empty($zones['R'])) {

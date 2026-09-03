@@ -206,12 +206,12 @@ class CheckoutController extends Controller
         }
 
         $request->validate([
-            'proof_file' => ['required', 'file', 'image', 'max:10240'],
+            'proof_file' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:10240'],
             'sender_bank' => ['required', 'string'],
             'sender_name' => ['required', 'string'],
         ], [
             'proof_file.required' => 'File bukti transfer wajib dipilih.',
-            'proof_file.image' => 'File harus berupa gambar (JPG, PNG).',
+            'proof_file.mimes' => 'File harus berupa gambar (JPG, PNG) atau PDF.',
             'proof_file.max' => 'Ukuran file maksimal 10MB.',
         ]);
 

@@ -128,8 +128,8 @@
                         <div id="upload-form-container">
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-700 mb-1">File Bukti Transfer (JPG/PNG, Max 10MB)</label>
-                                    <input type="file" id="proof_file_input" required accept="image/*" class="w-full text-xs text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#F37032] file:text-white hover:file:bg-[#e05f24] cursor-pointer">
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">File Bukti Transfer (JPG/PNG/PDF, Max 10MB)</label>
+                                    <input type="file" id="proof_file_input" required accept="image/*,application/pdf" class="w-full text-xs text-slate-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#F37032] file:text-white hover:file:bg-[#e05f24] cursor-pointer">
                                     <div id="file-preview" class="mt-2 hidden">
                                         <img id="preview-img" class="w-full max-h-48 object-contain rounded-xl border border-slate-200" alt="Preview">
                                     </div>
@@ -186,7 +186,7 @@
                             if (!senderName) { showError('Nama pengirim wajib diisi.'); return; }
                             var file = fileInput.files[0];
                             if (file.size > 10485760) { showError('Ukuran file maksimal 10MB.'); return; }
-                            if (!file.type.startsWith('image/')) { showError('File harus berupa gambar.'); return; }
+                            if (!file.type.startsWith('image/') && file.type !== 'application/pdf' && file.type !== '') { showError('File harus berupa gambar atau PDF.'); return; }
                             btn.disabled = true;
                             btn.textContent = 'Memproses...';
                             document.getElementById('upload-progress').classList.remove('hidden');
@@ -202,7 +202,7 @@
                                 fd.append('timestamp', sig.timestamp);
                                 fd.append('signature', sig.signature);
                                 fd.append('folder', sig.folder);
-                                var cloudUrl = 'https://api.cloudinary.com/v1_1/' + sig.cloud_name + '/image/upload';
+                                var cloudUrl = 'https://api.cloudinary.com/v1_1/' + sig.cloud_name + '/auto/upload';
                                 return new Promise(function(resolve, reject) {
                                     var xhr = new XMLHttpRequest();
                                     xhr.open('POST', cloudUrl);

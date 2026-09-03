@@ -67,3 +67,5 @@ password123
 
 admin@nanyaevents.com
 password123
+
+Akar masalahnya adalah TOCTOU (Time-of-check to time-of-use) Race Condition. Sebuah request pembatalan kursi yang delay/lagging (atau akibat sentuhan ganda/tab yang tidak sengaja terbuka) masuk ke server tepat di milidetik yang sama saat sistem sedang memproses Checkout. Karena sistem lama terlalu "polos", sistem menuruti request pembatalan tersebut dan mencabut kursi dari pesanan yang sudah dibayar.

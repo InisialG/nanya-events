@@ -9,23 +9,22 @@ export const options = {
       timeUnit: '1s',
       preAllocatedVUs: 400,
       stages: [
-        { target: 100, duration: '2s' },
-        { target: 500, duration: '5s' },
-        { target: 500, duration: '10s' },
-        { target: 0, duration: '5s' },
+        { target: 200, duration: '10s' },
+        { target: 500, duration: '2m' }, // Serangan dipertahankan selama 2 menit agar terekam di grafik Hostinger
+        { target: 0, duration: '10s' },
       ],
     },
   },
 };
 
 export default function () {
-  const url = 'https://events.nanyang.sch.id/api/checkout-simulation';
+  const url = 'https://testt.nanyang.sch.id/api/checkout-simulation';
 
   // We need to use valid event_session_id and seat_id. 
   // Assuming EventSession ID 1 exists, and Seat IDs 1 to 120 exist.
   const payload = JSON.stringify({
     event_session_id: 1,
-    seat_id: 559, // Menggunakan bangku ID 559 yang berstatus 'available' di server
+    seat_id: 564, // Menggunakan bangku ID 564 yang masih available
   });
 
   const params = {
