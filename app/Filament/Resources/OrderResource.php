@@ -446,6 +446,53 @@ class OrderResource extends Resource
                                 ->send();
                         }),
 
+                    // Action: Kirim Ulang Email Tiket
+                    Actions\Action::make('resendTicketEmail')
+                        ->label('Kirim Ulang E-Tiket')
+                        ->icon('heroicon-o-envelope')
+                        ->color('info')
+                        ->requiresConfirmation()
+                        ->modalHeading('Kirim Ulang Email E-Tiket')
+                        ->modalDescription('Apakah Anda yakin ingin mengirim ulang email E-Tiket ke pembeli ini?')
+                        ->visible(fn (Order $record): bool => $record->status === 'paid' && $record->tickets()->count() > 0)
+                        ->action(function (Order $record) {
+                            try {
+                                $record->load([
+                                    'user',
+                                    'eventSession.event.venue',
+                                    'tickets.seatAvailability.seatMaster.seatCategory'
+                                ]);
+
+                                if ($record->user && $record->user->email) {
+                                    $resendApiKey = env('RESEND_API_KEY');
+
+                                    if (!empty($resendApiKey)) {
+                                        \Illuminate\Support\Facades\Http::withToken($resendApiKey)->post('https://api.resend.com/emails', [
+                                            'from' => env('RESEND_FROM_ADDRESS', 'Nanya Events <onboarding@resend.dev>'),
+                                            'to' => [$record->user->email],
+                                            'subject' => '🎫 [Kirim Ulang] E-Tiket Resmi Nanya Events — Order #' . $record->order_code,
+                                            'html' => view('emails.ticket-approved', ['order' => $record])->render(),
+                                        ]);
+                                    } else {
+                                        \Illuminate\Support\Facades\Mail::to($record->user->email)->send(new \App\Mail\TicketApprovedMail($record));
+                                    }
+                                }
+
+                                \Filament\Notifications\Notification::make()
+                                    ->title('Email Berhasil Dikirim!')
+                                    ->body('Email E-Tiket berhasil dikirim ulang ke ' . $record->user?->email)
+                                    ->success()
+                                    ->send();
+                            } catch (\Exception $e) {
+                                \Illuminate\Support\Facades\Log::error('Gagal mengirim ulang email E-Tiket ke ' . $record->user?->email . ': ' . $e->getMessage());
+                                \Filament\Notifications\Notification::make()
+                                    ->title('Gagal Mengirim Email')
+                                    ->body('Terjadi kesalahan sistem. Cek log server.')
+                                    ->danger()
+                                    ->send();
+                            }
+                        }),
+
                     // Action 3: Reject Pembayaran
                     Actions\Action::make('rejectPayment')
                         ->label('Tolak Pembayaran')
