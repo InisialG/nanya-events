@@ -160,7 +160,7 @@
 
                         <!-- Header Banner with Logo -->
                         <div style="background-color: #F37032; padding: 14px 16px; text-align: center;">
-                            <img src="{{ asset('img/logo-nanyang-white.png') }}" alt="Nanyang Zhi Hui"
+                            <img src="https://e-events.nanyang.sch.id/img/logo-nanyang-white.png" alt="Nanyang Zhi Hui"
                                 style="height: 50px; width: auto; margin: 0 auto; display: block;">
                         </div>
 
