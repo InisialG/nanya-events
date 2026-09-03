@@ -20,6 +20,8 @@ class CancelExpiredOrdersJob implements ShouldQueue
      */
     public function handle(): void
     {
+        return; // DIBEKUKAN SEMENTARA: Jangan batalkan pesanan pending secara otomatis
+        
         $expiredOrders = Order::where('status', 'pending_payment')
             ->where('expired_at', '<', now())
             ->get();

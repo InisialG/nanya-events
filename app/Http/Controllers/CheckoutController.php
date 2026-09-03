@@ -169,7 +169,8 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        // Check if expired
+        // Check if expired (DIBEKUKAN SEMENTARA - Jangan batal otomatis)
+        /*
         if ($order->status === 'pending_payment' && $order->expired_at < now()) {
             DB::transaction(function () use ($order) {
                 $order->update(['status' => 'cancelled']);
@@ -181,6 +182,7 @@ class CheckoutController extends Controller
                     ]);
             });
         }
+        */
 
         // Kita tidak akan me-redirect pengguna ke halaman depan, 
         // melainkan membiarkan view merender UI khusus "Pesanan Dibatalkan".
@@ -201,8 +203,9 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        if ($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at < now())) {
-            return redirect()->route('events.index')->with('error', 'Waktu pembayaran telah habis (expired).');
+        // DIBEKUKAN SEMENTARA: Biarkan user tetap bisa upload meski lewat batas waktu
+        if ($order->status === 'cancelled') {
+            return redirect()->route('events.index')->with('error', 'Pesanan ini sudah dibatalkan.');
         }
 
         $request->validate([
@@ -247,7 +250,7 @@ class CheckoutController extends Controller
 
                 \Illuminate\Support\Facades\DB::table('orders')->where('id', $order->id)->update([
                     'status' => 'waiting_verification',
-                    'expired_at' => \Illuminate\Support\Facades\DB::raw('DATE_ADD(created_at, INTERVAL 24 HOUR)'),
+                    'expired_at' => null,
                     'updated_at' => now(),
                 ]);
             });
@@ -271,8 +274,9 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        if ($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at < now())) {
-            return response()->json(['success' => false, 'error' => 'Waktu pembayaran telah habis (expired).'], 403);
+        // DIBEKUKAN SEMENTARA: Biarkan user tetap bisa upload meski lewat batas waktu
+        if ($order->status === 'cancelled') {
+            return response()->json(['success' => false, 'error' => 'Pesanan ini sudah dibatalkan.'], 403);
         }
 
         $cloudName = env('CLOUDINARY_CLOUD_NAME');
@@ -331,8 +335,9 @@ class CheckoutController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        if ($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at < now())) {
-            return response()->json(['success' => false, 'message' => 'Waktu pembayaran telah habis (expired).'], 403);
+        // DIBEKUKAN SEMENTARA: Biarkan user tetap bisa upload meski lewat batas waktu
+        if ($order->status === 'cancelled') {
+            return response()->json(['success' => false, 'message' => 'Pesanan ini sudah dibatalkan.'], 403);
         }
 
         $cloudinaryUrl = $request->input('cloudinary_url');
@@ -358,7 +363,7 @@ class CheckoutController extends Controller
 
                 \Illuminate\Support\Facades\DB::table('orders')->where('id', $order->id)->update([
                     'status' => 'waiting_verification',
-                    'expired_at' => \Illuminate\Support\Facades\DB::raw('DATE_ADD(created_at, INTERVAL 24 HOUR)'),
+                    'expired_at' => null,
                     'updated_at' => now(),
                 ]);
             });

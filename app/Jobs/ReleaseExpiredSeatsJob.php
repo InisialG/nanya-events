@@ -18,6 +18,8 @@ class ReleaseExpiredSeatsJob implements ShouldQueue
      */
     public function handle(): void
     {
+        return; // DIBEKUKAN SEMENTARA: Jangan lepas kursi secara otomatis
+        
         SeatAvailability::where('status', 'locked')
             ->whereNull('order_id')
             ->where('locked_until', '<', now())
