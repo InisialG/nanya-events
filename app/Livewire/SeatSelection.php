@@ -40,10 +40,13 @@ class SeatSelection extends Component
 
     public function loadData()
     {
-        $this->event = Event::with('venue.seatCategories')
-            ->where('slug', $this->slug)
-            ->whereIn('status', ['registration', 'ongoing', 'published'])
-            ->firstOrFail();
+        $query = Event::with('venue.seatCategories')->where('slug', $this->slug);
+
+        if (!Auth::check() || (!Auth::user()->isAdmin() && !Auth::user()->isSuperAdmin())) {
+            $query->whereIn('status', ['registration', 'ongoing', 'published']);
+        }
+
+        $this->event = $query->firstOrFail();
 
         $this->eventSession = EventSession::where('id', $this->sessionId)
             ->where('event_id', $this->event->id)
@@ -148,8 +151,10 @@ class SeatSelection extends Component
         }
 
         if (in_array($this->event->status, ['ongoing', 'finished', 'coming_soon'])) {
-            session()->flash('error', 'Pemesanan tiket sedang ditutup.');
-            return;
+            if (!Auth::user()->isAdmin() && !Auth::user()->isSuperAdmin()) {
+                session()->flash('error', 'Pemesanan tiket sedang ditutup.');
+                return;
+            }
         }
 
         $seatAvail = SeatAvailability::select('id', 'event_session_id', 'seat_master_id', 'status', 'locked_until')
