@@ -77,7 +77,7 @@
                 <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm mt-6">
                     <h3 class="font-heading font-bold text-lg text-slate-900 mb-4">Detail Kursi Pesanan Anda</h3>
                     <div class="space-y-3">
-                        @if($order->status === 'cancelled' || $order->expired_at < now())
+                        @if($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at && $order->expired_at < now()))
                             <div class="p-5 rounded-2xl bg-rose-50 border border-rose-200 text-center">
                                 <svg class="w-8 h-8 text-rose-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <p class="text-xs text-rose-700 font-semibold">Informasi kursi tidak tersedia karena seluruh kursi telah dilepas kembali (dibatalkan) akibat batas waktu pembayaran telah habis.</p>
