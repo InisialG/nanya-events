@@ -22,7 +22,7 @@
                         <div class="bg-white p-6 rounded-3xl border-2 border-orange-200 shadow-sm space-y-4">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-mono text-slate-500 font-bold">{{ $order->order_code }}</span>
-                                @if($order->status === 'cancelled' || ($order->expired_at && $order->expired_at < now()))
+                                @if($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at && $order->expired_at < now()))
                                     <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">Pesanan Dibatalkan</span>
                                 @elseif($order->status === 'pending_payment')
                                     <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#F37032] border border-orange-200">Belum Bayar</span>
@@ -36,7 +36,7 @@
                                 <p class="text-xs text-slate-500">Total Pembayaran: <strong class="text-[#F37032] font-heading font-bold text-base">Rp {{ number_format($order->final_amount, 0, ',', '.') }}</strong></p>
                             </div>
 
-                            @if($order->status === 'cancelled' || $order->expired_at < now())
+                            @if($order->status === 'cancelled' || ($order->status === 'pending_payment' && $order->expired_at && $order->expired_at < now()))
                             <a href="{{ route('checkout.instructions', $order->order_code) }}" class="w-full py-3.5 px-5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs text-center shadow-md shadow-rose-600/20 transition-all flex items-center justify-center gap-2">
                                 <span>Lihat Detail Pembatalan</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
