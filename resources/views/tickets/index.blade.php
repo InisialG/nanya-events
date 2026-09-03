@@ -22,7 +22,7 @@
                         <div class="bg-white p-6 rounded-3xl border-2 border-orange-200 shadow-sm space-y-4">
                             <div class="flex items-center justify-between">
                                 <span class="text-xs font-mono text-slate-500 font-bold">{{ $order->order_code }}</span>
-                                @if($order->status === 'cancelled' || $order->expired_at < now())
+                                @if($order->status === 'cancelled' || ($order->expired_at && $order->expired_at < now()))
                                     <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">Pesanan Dibatalkan</span>
                                 @elseif($order->status === 'pending_payment')
                                     <span class="px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-[#F37032] border border-orange-200">Belum Bayar</span>

@@ -105,6 +105,8 @@ class OrderResource extends Resource
                                 'cancelled' => 'Dibatalkan',
                             ])
                             ->default('waiting_verification')
+                            ->disabled()
+                            ->dehydrated(false)
                             ->required(),
 
                         Components\Select::make('selected_seat_ids')
