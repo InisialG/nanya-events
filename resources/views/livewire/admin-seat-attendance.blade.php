@@ -153,7 +153,7 @@
                     </div>
 
                     <!-- Global Grid Container untuk Lorong Vertikal Lurus -->
-                    <div class="grid grid-cols-[1fr_auto_1fr] gap-x-4 sm:gap-x-8 gap-y-1 sm:gap-y-1.5 w-full min-w-max mt-4">
+                    <div class="grid grid-cols-[1fr_auto_1fr] gap-x-2 sm:gap-x-4 gap-y-1 sm:gap-y-1 w-full min-w-max mt-4">
                         <!-- Headers Zona -->
                         <div class="text-right text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase mb-2">Zona Kiri</div>
                         <div class="text-center text-[10px] sm:text-xs font-bold text-slate-400 tracking-widest uppercase px-4 sm:px-8 mb-2">Zona Tengah</div>
@@ -161,10 +161,10 @@
 
                         @foreach($groupedSeatsByRow as $rowLetter => $zones)
                             <!-- ZONA KIRI -->
-                            <div class="flex items-center gap-1 sm:gap-1.5 justify-end border-b border-slate-100 pb-1.5 min-h-[36px]">
+                            <div class="flex items-center gap-0.5 sm:gap-1 justify-end border-b border-slate-100 pb-1.5 min-h-[36px]">
                                 @if(!empty($zones['L']))
-                                    <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
-                                    <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-end">
+                                    <span class="w-4 sm:w-5 text-[9px] sm:text-[10px] font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    <div class="flex items-center gap-0.5 sm:gap-1 flex-nowrap justify-end">
                                         @foreach($zones['L'] as $seatAvail)
                                             @php
                                                 $seatMaster = $seatAvail->seatMaster;
@@ -180,7 +180,7 @@
                                                 type="button"
                                                 wire:click="showSeatDetail({{ $seatAvail->id }})"
                                                 title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @elseif($isSold) (Terjual) @elseif($isLocked) (Dikunci) @else (Tersedia) @endif"
-                                                class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
+                                                class="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 rounded text-[8px] sm:text-[9px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
                                                     @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
                                             >
                                                 @if ($isAttended)
@@ -200,10 +200,10 @@
                             </div>
 
                             <!-- ZONA TENGAH -->
-                            <div class="flex items-center gap-1 sm:gap-1.5 justify-center border-b border-slate-100 border-l border-r border-slate-200 px-2 sm:px-4 pb-1.5 min-h-[36px]">
+                            <div class="flex items-center gap-0.5 sm:gap-1 justify-center border-b border-slate-100 border-l border-r border-slate-200 px-2 sm:px-4 pb-1.5 min-h-[36px]">
                                 @if(!empty($zones['C']))
-                                    <span class="w-5 sm:w-6 text-[10px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
-                                    <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-center">
+                                    <span class="w-4 sm:w-5 text-[8px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    <div class="flex items-center gap-0.5 sm:gap-1 flex-nowrap justify-center">
                                         @foreach($zones['C'] as $seatAvail)
                                             @php
                                                 $seatMaster = $seatAvail->seatMaster;
@@ -219,7 +219,7 @@
                                                 type="button"
                                                 wire:click="showSeatDetail({{ $seatAvail->id }})"
                                                 title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @elseif($isSold) (Terjual) @elseif($isLocked) (Dikunci) @else (Tersedia) @endif"
-                                                class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
+                                                class="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 rounded text-[8px] sm:text-[9px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
                                                     @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
                                             >
                                                 @if ($isAttended)
@@ -235,14 +235,14 @@
                                             </button>
                                         @endforeach
                                     </div>
-                                    <span class="w-5 sm:w-6 text-[10px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    <span class="w-4 sm:w-5 text-[8px] font-bold text-slate-300 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
                                 @endif
                             </div>
 
                             <!-- ZONA KANAN -->
-                            <div class="flex items-center gap-1 sm:gap-1.5 justify-start border-b border-slate-100 pb-1.5 min-h-[36px]">
+                            <div class="flex items-center gap-0.5 sm:gap-1 justify-start border-b border-slate-100 pb-1.5 min-h-[36px]">
                                 @if(!empty($zones['R']))
-                                    <div class="flex items-center gap-1 sm:gap-1.5 flex-nowrap justify-start">
+                                    <div class="flex items-center gap-0.5 sm:gap-1 flex-nowrap justify-start">
                                         @foreach($zones['R'] as $seatAvail)
                                             @php
                                                 $seatMaster = $seatAvail->seatMaster;
@@ -258,7 +258,7 @@
                                                 type="button"
                                                 wire:click="showSeatDetail({{ $seatAvail->id }})"
                                                 title="Kursi {{ $seatMaster->seat_code }} @if($isAttended) (HADIR) @elseif($isPending) (Belum Hadir) @elseif($isSold) (Terjual) @elseif($isLocked) (Dikunci) @else (Tersedia) @endif"
-                                                class="w-6 h-6 sm:w-7 sm:h-7 shrink-0 rounded-md text-[9px] sm:text-[10px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
+                                                class="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 rounded text-[8px] sm:text-[9px] font-black flex items-center justify-center transition-all duration-150 cursor-pointer hover:scale-110 hover:shadow-md active:scale-95 shadow-xs relative group
                                                     @if($isAttended) bg-emerald-500 text-white ring-2 ring-emerald-400 shadow-md shadow-emerald-500/20 @elseif($isPending) bg-blue-600 text-white ring-2 ring-blue-400 shadow-md shadow-blue-500/20 @elseif($isLocked) bg-amber-500 text-white @elseif($isSold) bg-slate-700 text-white @else bg-slate-200 text-slate-700 hover:bg-slate-300 border border-slate-300 @endif"
                                             >
                                                 @if ($isAttended)
@@ -274,7 +274,7 @@
                                             </button>
                                         @endforeach
                                     </div>
-                                    <span class="w-5 sm:w-6 text-[11px] sm:text-xs font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
+                                    <span class="w-4 sm:w-5 text-[9px] sm:text-[10px] font-bold text-slate-500 text-center uppercase shrink-0 select-none">{{ $rowLetter }}</span>
                                 @endif
                             </div>
 
