@@ -10,8 +10,11 @@ class EventCatalogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Event::with(['venue.seatCategories', 'eventSessions'])
-            ->whereIn('status', ['coming_soon', 'registration', 'ongoing', 'published']);
+        $query = Event::with(['venue.seatCategories', 'eventSessions']);
+            
+        if (!\Illuminate\Support\Facades\Auth::check() || (!\Illuminate\Support\Facades\Auth::user()->isAdmin() && !\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())) {
+            $query->whereIn('status', ['coming_soon', 'registration', 'ongoing', 'published']);
+        }
 
         if ($request->has('search') && !empty($request->search)) {
             $query->where('title', 'like', '%' . $request->search . '%');
@@ -36,12 +39,16 @@ class EventCatalogController extends Controller
 
     public function show($slug)
     {
-        $event = Event::with(['venue.seatCategories', 'eventSessions' => function ($q) {
+        $query = Event::with(['venue.seatCategories', 'eventSessions' => function ($q) {
             $q->orderBy('session_date', 'asc')->orderBy('start_time', 'asc');
         }])
-        ->where('slug', $slug)
-        ->whereIn('status', ['coming_soon', 'registration', 'ongoing', 'published'])
-        ->firstOrFail();
+        ->where('slug', $slug);
+
+        if (!\Illuminate\Support\Facades\Auth::check() || (!\Illuminate\Support\Facades\Auth::user()->isAdmin() && !\Illuminate\Support\Facades\Auth::user()->isSuperAdmin())) {
+            $query->whereIn('status', ['coming_soon', 'registration', 'ongoing', 'published']);
+        }
+
+        $event = $query->firstOrFail();
 
         $categories = $event->venue?->seatCategories;
         if ($categories && $categories->count() > 0) {
