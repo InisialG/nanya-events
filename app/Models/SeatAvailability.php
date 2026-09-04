@@ -42,4 +42,9 @@ class SeatAvailability extends Model
     {
         return $this->hasOne(Ticket::class, 'seat_availability_id');
     }
+
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
 }
