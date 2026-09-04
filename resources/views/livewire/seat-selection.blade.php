@@ -143,7 +143,7 @@
                                                     $seatMaster = $seatAvail->seatMaster;
                                                     $category = $seatMaster->seatCategory;
                                                     $isSelected = in_array($seatAvail->id, $selectedSeatIds);
-                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && $seatAvail->locked_until > now());
+                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && ($seatAvail->locked_until > now() || $seatAvail->order_id !== null));
                                                     $bgColor = $category ? $category->color_code : '#00D4E6';
                                                 @endphp
                                                 <button 
@@ -173,7 +173,7 @@
                                                     $seatMaster = $seatAvail->seatMaster;
                                                     $category = $seatMaster->seatCategory;
                                                     $isSelected = in_array($seatAvail->id, $selectedSeatIds);
-                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && $seatAvail->locked_until > now());
+                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && ($seatAvail->locked_until > now() || $seatAvail->order_id !== null));
                                                     $bgColor = $category ? $category->color_code : '#00D4E6';
                                                 @endphp
                                                 <button 
@@ -203,7 +203,7 @@
                                                     $seatMaster = $seatAvail->seatMaster;
                                                     $category = $seatMaster->seatCategory;
                                                     $isSelected = in_array($seatAvail->id, $selectedSeatIds);
-                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && $seatAvail->locked_until > now());
+                                                    $isLockedOrSold = ($seatAvail->status === 'sold') || ($seatAvail->status === 'locked' && !$isSelected && ($seatAvail->locked_until > now() || $seatAvail->order_id !== null));
                                                     $bgColor = $category ? $category->color_code : '#00D4E6';
                                                 @endphp
                                                 <button 
