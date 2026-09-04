@@ -169,28 +169,45 @@
                     </div> --}}
 
                     <!-- CTA Booking Button (Refined & Connected to Event Status) -->
-                    @if($event->status === 'coming_soon')
-                        <div class="w-full py-4 px-6 rounded-2xl bg-sky-50 border border-sky-200 text-sky-800 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm">
-                            <svg class="w-5 h-5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>Pendaftaran / Registrasi Kursi Belum Dibuka (Coming Soon)</span>
-                        </div>
-                    @elseif($event->status === 'ongoing')
-                        <div class="w-full py-4 px-6 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm cursor-not-allowed">
-                            <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>Pendaftaran Ditutup (Pertunjukan Sedang Berlangsung)</span>
-                        </div>
-                    @elseif($event->status === 'finished')
-                        <div class="w-full py-4 px-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-500 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm cursor-not-allowed">
-                            <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Pertunjukan / Event Telah Selesai</span>
-                        </div>
+                    @php
+                        $isAdmin = Auth::check() && (Auth::user()->isAdmin() || Auth::user()->isSuperAdmin());
+                        $isDisabled = in_array($event->status, ['coming_soon', 'ongoing', 'finished', 'draft']);
+                    @endphp
+
+                    @if($isDisabled && !$isAdmin)
+                        @if($event->status === 'coming_soon')
+                            <div class="w-full py-4 px-6 rounded-2xl bg-sky-50 border border-sky-200 text-sky-800 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm">
+                                <svg class="w-5 h-5 text-sky-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span>Pendaftaran / Registrasi Kursi Belum Dibuka (Coming Soon)</span>
+                            </div>
+                        @elseif($event->status === 'ongoing')
+                            <div class="w-full py-4 px-6 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm cursor-not-allowed">
+                                <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span>Pendaftaran Ditutup (Pertunjukan Sedang Berlangsung)</span>
+                            </div>
+                        @elseif($event->status === 'finished')
+                            <div class="w-full py-4 px-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-500 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm cursor-not-allowed">
+                                <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Pertunjukan / Event Telah Selesai</span>
+                            </div>
+                        @else
+                            <div class="w-full py-4 px-6 rounded-2xl bg-slate-100 border border-slate-200 text-slate-500 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-sm cursor-not-allowed">
+                                <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span>Event Tidak Tersedia</span>
+                            </div>
+                        @endif
                     @else
                         @auth
                             <template x-if="selectedSessionId > 0">
                                 <a :href="'/events/{{ $event->slug }}/sessions/' + selectedSessionId + '/seats'" 
                                    class="w-full py-3.5 px-6 rounded-xl bg-[#F37032] hover:bg-[#e05f24] text-white font-bold text-sm text-center shadow-md shadow-[#F37032]/20 hover:shadow-lg transition-all flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5z"></path></svg>
-                                    <span>Pilih Kursi dari Denah Venue</span>
+                                    <span>
+                                        Pilih Kursi dari Denah Venue
+                                        @if($isDisabled && $isAdmin)
+                                            <span class="text-[10px] ml-1 bg-white/25 px-2 py-0.5 rounded-full">(Akses Admin)</span>
+                                        @endif
+                                    </span>
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                 </a>
                             </template>
