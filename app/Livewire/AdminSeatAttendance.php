@@ -123,6 +123,7 @@ class AdminSeatAttendance extends Component
         $totalSold = 0;
         $totalAttended = 0;
         $totalPending = 0;
+        $totalLocked = 0;
         $totalAvailable = 0;
         $attendancePercentage = 0;
 
@@ -145,6 +146,8 @@ class AdminSeatAttendance extends Component
                     $totalSold++;
                 } elseif ($s->status === 'sold') {
                     $totalSold++;
+                } elseif ($s->status === 'locked') {
+                    $totalLocked++;
                 } else {
                     $totalAvailable++;
                 }
@@ -193,6 +196,7 @@ class AdminSeatAttendance extends Component
             'totalSold' => $totalSold,
             'totalAttended' => $totalAttended,
             'totalPending' => $totalPending,
+            'totalLocked' => $totalLocked,
             'totalAvailable' => $totalAvailable,
             'attendancePercentage' => $attendancePercentage,
         ])->layout('layouts.app');

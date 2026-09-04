@@ -54,8 +54,8 @@
         </div>
     </div>
 
-    <!-- Live KPI Summary Stats (4 Cards) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <!-- Live KPI Summary Stats (5 Cards) -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         <!-- 1. Hadir (Dipindai) -->
         <div class="bg-white p-5 rounded-3xl border-2 border-emerald-500/40 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between mb-2">
@@ -82,7 +82,17 @@
             <span class="text-[10px] text-slate-400 mt-1 block">Tiket lunas, penonton belum tiba di gate</span>
         </div>
 
-        <!-- 3. Tersedia (Belum Dipesan) -->
+        <!-- 3. Dikunci -->
+        <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-600">Dikunci</span>
+                <span class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-sm">🔒</span>
+            </div>
+            <span class="font-heading font-black text-3xl sm:text-4xl text-amber-600 block">{{ $totalLocked }}</span>
+            <span class="text-[10px] text-slate-400 mt-1 block">Proses pemesanan (Locked)</span>
+        </div>
+
+        <!-- 4. Tersedia (Belum Dipesan) -->
         <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Kursi Tersedia</span>
@@ -92,7 +102,7 @@
             <span class="text-[10px] text-slate-400 mt-1 block">Belum dipesan / masih kosong</span>
         </div>
 
-        <!-- 4. Total Kapasitas -->
+        <!-- 5. Total Kapasitas -->
         <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-2">
                 <span class="text-[11px] font-extrabold uppercase tracking-wider text-[#F37032]">Total Kapasitas</span>

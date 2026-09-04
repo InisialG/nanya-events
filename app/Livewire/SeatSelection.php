@@ -246,6 +246,11 @@ class SeatSelection extends Component
             return;
         }
 
+        if (count($this->selectedSeatIds) % 2 !== 0) {
+            session()->flash('error', 'Pemesanan kursi harus genap (2, 4, 6, dst).');
+            return;
+        }
+
         session([
             'checkout_event_id' => $this->event->id,
             'checkout_session_id' => $this->eventSession->id,
