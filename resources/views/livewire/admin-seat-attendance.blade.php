@@ -349,6 +349,17 @@
                             </div>
                             <span class="px-2.5 py-1 rounded-lg text-[10px] font-black bg-blue-600 text-white uppercase">Lunas</span>
                         </div>
+                    @elseif ($selectedSeatDetails['is_locked'])
+                        <div class="p-4 rounded-2xl bg-orange-50 border border-orange-200 text-orange-900 flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-8 h-8 rounded-xl bg-orange-500 text-white flex items-center justify-center font-bold">🔒</span>
+                                <div>
+                                    <span class="font-extrabold text-sm block">DIKUNCI / CHECKOUT</span>
+                                    <span class="text-[11px] text-orange-700">Oleh: {{ $selectedSeatDetails['locked_by_name'] ?? 'Tidak Diketahui' }}</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-lg text-[10px] font-black bg-orange-500 text-white uppercase">Dikunci</span>
+                        </div>
                     @else
                         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-slate-700 flex items-center gap-2.5">
                             <span class="w-8 h-8 rounded-xl bg-slate-200 text-slate-600 flex items-center justify-center font-bold">🛋️</span>

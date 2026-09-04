@@ -133,6 +133,7 @@ class SeatSelection extends Component
             SeatAvailability::where('event_session_id', $this->sessionId)->update([
                 'status' => 'available',
                 'order_id' => null,
+                'user_id' => null,
                 'locked_until' => null,
             ]);
 
@@ -186,6 +187,7 @@ class SeatSelection extends Component
                     ->update([
                         'status' => 'available',
                         'order_id' => null,
+                        'user_id' => null,
                         'locked_until' => null,
                     ]);
 
@@ -211,6 +213,7 @@ class SeatSelection extends Component
                 $seatAvail->update([
                     'status' => 'locked',
                     'order_id' => null,
+                    'user_id' => Auth::id(),
                     'locked_until' => now()->addMinutes($this->seatLockMinutes),
                 ]);
             });

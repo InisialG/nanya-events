@@ -78,6 +78,7 @@ class AdminSeatAttendance extends Component
             'seatMaster.seatCategory',
             'ticket.order.user',
             'ticket.scanner',
+            'user',
         ])
         ->where('id', $seatAvailabilityId)
         ->first();
@@ -100,8 +101,10 @@ class AdminSeatAttendance extends Component
             'ticket_status' => $ticket?->status,
             'is_attended' => $ticket && $ticket->status === 'used',
             'is_pending' => $ticket && $ticket->status === 'valid',
+            'is_locked' => $seat->status === 'locked',
             'user_name' => $ticket?->order?->user?->name,
             'user_email' => $ticket?->order?->user?->email,
+            'locked_by_name' => $seat->user?->name,
             'scanned_at' => $ticket?->scanned_at ? $ticket->scanned_at->translatedFormat('d M Y, H:i:s') : null,
             'scanned_by' => $ticket?->scanner?->name,
         ];

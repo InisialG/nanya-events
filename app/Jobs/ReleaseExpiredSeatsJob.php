@@ -25,6 +25,7 @@ class ReleaseExpiredSeatsJob implements ShouldQueue
             ->where('locked_until', '<', now())
             ->update([
                 'status' => 'available',
+                'user_id' => null,
                 'locked_until' => null,
             ]);
     }

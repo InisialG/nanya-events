@@ -14,6 +14,7 @@ class SeatAvailability extends Model
         'event_session_id',
         'seat_master_id',
         'order_id',
+        'user_id',
         'status',
         'locked_until',
     ];
@@ -30,6 +31,11 @@ class SeatAvailability extends Model
     public function seatMaster(): BelongsTo
     {
         return $this->belongsTo(SeatMaster::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function ticket(): \Illuminate\Database\Eloquent\Relations\HasOne
